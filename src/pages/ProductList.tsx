@@ -22,10 +22,10 @@ const ProductList = () => {
 
     // Search filter
     if (search) {
-      filtered = filtered.filter(product => 
-        product.name.includes(search) ||
-        product.sku.includes(search)
-      )
+      const lowCasedSearch = search.toLowerCase()
+      filtered = filtered.filter((product) => {
+        return product.name.toLowerCase().includes(lowCasedSearch) || product.sku.toLowerCase().includes(lowCasedSearch)
+      })
     }
 
     // Sorting logic
@@ -34,7 +34,7 @@ const ProductList = () => {
         filtered.sort((a, b) => a.name.localeCompare(b.name))
         break
       case 'price':
-        // Price sorting to implement
+        filtered.sort((a, b) => a.basePrice - b.basePrice)
         break
       case 'stock':
         filtered.sort((a, b) => b.stock - a.stock)
@@ -72,7 +72,7 @@ const ProductList = () => {
               Descubre nuestra selección de productos promocionales premium
             </p>
           </div>
-          
+
           <div className="page-stats">
             <div className="stat-item">
               <span className="stat-value p1-medium">{filteredProducts.length}</span>
@@ -102,7 +102,7 @@ const ProductList = () => {
               <span className="material-icons">search_off</span>
               <h3 className="h2">No hay productos</h3>
               <p className="p1">No se encontraron productos que coincidan con tu búsqueda.</p>
-              <button 
+              <button
                 className="btn btn-primary cta1"
                 onClick={() => {
                   setSearchQuery('')

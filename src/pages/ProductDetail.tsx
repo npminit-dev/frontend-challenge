@@ -17,7 +17,6 @@ const ProductDetail = () => {
       const foundProduct = products.find(p => p.id === parseInt(id))
       setProduct(foundProduct || null)
       
-      // Set default selections
       if (foundProduct?.colors && foundProduct.colors.length > 0) {
         setSelectedColor(foundProduct.colors[0])
       }
@@ -27,7 +26,6 @@ const ProductDetail = () => {
     }
   }, [id])
 
-  // Handle loading state
   if (!product) {
     return (
       <div className="container">
@@ -44,7 +42,6 @@ const ProductDetail = () => {
     )
   }
 
-  // Validate product status
   const canAddToCart = product.status === 'active' && product.stock > 0
 
   return (
@@ -65,8 +62,6 @@ const ProductDetail = () => {
                 <span className="material-icons">image</span>
               </div>
             </div>
-            
-            {/* Bug: thumbnails don't work */}
             <div className="image-thumbnails">
               {[1, 2, 3].map(i => (
                 <div key={i} className="thumbnail">
@@ -81,8 +76,6 @@ const ProductDetail = () => {
             <div className="product-header">
               <h1 className="product-title h2">{product.name}</h1>
               <p className="product-sku p1">SKU: {product.sku}</p>
-              
-              {/* Status */}
               <div className="product-status">
                 {product.status === 'active' ? (
                   <span className="status-badge status-active l1">✓ Disponible</span>
@@ -94,7 +87,6 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Description */}
             {product.description && (
               <div className="product-description">
                 <h3 className="p1-medium">Descripción</h3>
@@ -102,7 +94,6 @@ const ProductDetail = () => {
               </div>
             )}
 
-            {/* Features */}
             {product.features && product.features.length > 0 && (
               <div className="product-features">
                 <h3 className="p1-medium">Características</h3>
@@ -154,7 +145,7 @@ const ProductDetail = () => {
               </div>
             )}
 
-            {/* Quick Actions */}
+            {/* Quantity Selector */}
             <div className="product-actions">
               <div className="quantity-selector">
                 <label className="quantity-label l1">Cantidad:</label>
@@ -162,19 +153,28 @@ const ProductDetail = () => {
                   <button 
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="quantity-btn"
+                    disabled={!canAddToCart}
                   >
                     <span className="material-icons">remove</span>
                   </button>
+
                   <input 
                     type="number" 
-                    value={quantity} 
-                    onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                    value={product.stock > 0 ? quantity : 0} 
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value) || 1
+                      setQuantity(Math.min(Math.max(1, val), product.stock))
+                    }}
                     className="quantity-input"
                     min="1"
+                    max={product.stock}
+                    disabled={!canAddToCart}
                   />
+
                   <button 
-                    onClick={() => setQuantity(quantity + 1)}
+                    onClick={() => setQuantity(Math.min(quantity + 1, product.stock))}
                     className="quantity-btn"
+                    disabled={!canAddToCart}
                   >
                     <span className="material-icons">add</span>
                   </button>
