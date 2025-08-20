@@ -13,7 +13,7 @@ const Cart = () => {
 
   if (cart.length === 0) {
     return (
-      <div className="cart-page empty">
+      <div className="cart-page empty page-appear">
         <h2>Tu carrito está vacío</h2>
         <Link to="/" className="btn btn-primary">
           Volver al catálogo
@@ -23,7 +23,7 @@ const Cart = () => {
   }
 
   return (
-    <div className="cart-page">
+    <div className="cart-page page-appear">
       <h1>Carrito de Compras ({totalItems} {totalItems === 1 ? 'item' : 'items'})</h1>
 
       <div className="cart-items">

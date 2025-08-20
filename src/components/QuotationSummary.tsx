@@ -18,10 +18,10 @@ export const QuotationSummary = ({
     0
   );
 
-  const { addToast } = useToast()
+  const { addToast, removeToast } = useToast()
 
   const generatePDF = () => {
-    addToast('Generando PDF...', 'loading');
+    const loadingId = addToast('Generando PDF...', 'loading');
     const doc = new jsPDF();
     doc.setFontSize(16);
     doc.text('Cotización de Productos', 14, 20);
@@ -47,6 +47,7 @@ export const QuotationSummary = ({
 
     doc.text(`Total: $${total}`, 14, y + 6);
     setTimeout(() => {
+      removeToast(loadingId);
       addToast('PDF generado correctamente.', 'success');
       doc.save(`cotizacion_${companyData.name || 'empresa'}.pdf`);
     }, 2000)

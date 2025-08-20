@@ -61,7 +61,7 @@ const ProductDetail = () => {
   const canAddToCart = product.status === 'active' && product.stock > 0
 
   return (
-    <div className="product-detail-page">
+    <div className="product-detail-page page-appear">
       <div className="container">
         {/* Breadcrumb */}
         <nav className="breadcrumb">
@@ -204,13 +204,13 @@ const ProductDetail = () => {
                         id: product.id,
                         name: product.name,
                         basePrice: product.basePrice,
-                        unitPrice: product.basePrice, 
+                        unitPrice: product.basePrice,
                         quantity: quantity,
-                        priceBreaks: product.priceBreaks, 
+                        priceBreaks: product.priceBreaks,
                         color: selectedColor,
                         size: selectedSize,
                       })
-  
+
                       addToast('Producto agregado al carrito.', 'success')
                     }
                   }}
@@ -233,7 +233,7 @@ const ProductDetail = () => {
 
         {/* Pricing Calculator */}
         <div className="pricing-section">
-          <PricingCalculator product={product} />
+          <PricingCalculator product={product} selectedColor={selectedColor} selectedSize={selectedSize} />
         </div>
       </div>
     </div>

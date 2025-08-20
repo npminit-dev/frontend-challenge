@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import ProductCard from '../components/ProductCard'
 import ProductFilters from '../components/ProductFilters'
-import { products as allProducts, categories } from '../data/products'
+import { products as allProducts } from '../data/products'
 import { Product } from '../types/Product'
 import './ProductList.css'
 import { useToast } from '../ToastContext'
@@ -18,13 +18,14 @@ const ProductList = () => {
 
   // Loading
   const [loading, setLoading] = useState(true)
-  const { addToast } = useToast()
+  const { addToast, removeToast } = useToast()
   useEffect(() => {
     // Simula carga de productos (2 segundos)
-    addToast('Cargando productos...', 'loading')
+    const loadingId = addToast('Cargando productos...', 'loading')
     setLoading(true)
     const timer = setTimeout(() => {
       setFilteredProducts(allProducts)
+      removeToast(loadingId) // Remueve el toast de carga
       addToast('Productos cargados!', 'success')
       setLoading(false)
     }, 1200)
@@ -104,7 +105,7 @@ const ProductList = () => {
   }
 
   return (
-    <div className="product-list-page">
+    <div className="product-list-page page-appear">
       <div className="container">
         {/* Page Header */}
         <div className="page-header">

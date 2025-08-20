@@ -49,6 +49,12 @@ const ProductFilters = ({
     onPriceRangeChange(null)
   }
 
+  const handleClearAllFilters = () => {
+    setMinPriceInput('');
+    setMaxPriceInput('');
+    onClearFilters();
+  };
+
   return (
     <div className="product-filters">
       <div className="filters-card">
@@ -160,7 +166,7 @@ const ProductFilters = ({
 
         {/* Clear All Filters */}
         <div className="filter-section">
-          <button className="btn btn-secondary w-full" onClick={onClearFilters}>
+          <button className="btn btn-secondary w-full" onClick={handleClearAllFilters}>
             Limpiar todos los filtros
           </button>
         </div>

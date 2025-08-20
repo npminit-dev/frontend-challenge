@@ -31,7 +31,7 @@ export const Quotation = () => {
   };
 
   return (
-    <div className="quotation-simulator">
+    <div className="quotation-simulator page-appear">
       <h1 className="quotation-title">Simulador de Cotización</h1>
 
       <div className="quotation-form-wrapper">

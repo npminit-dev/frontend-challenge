@@ -10,7 +10,8 @@ interface Toast {
 }
 
 interface ToastContextProps {
-  addToast: (message: string, type: ToastType) => void;
+  addToast: (message: string, type: ToastType) => number; // retorna el id
+  removeToast: (id: number) => void; // nueva función
 }
 
 const ToastContext = createContext<ToastContextProps | undefined>(undefined);
@@ -18,14 +19,19 @@ const ToastContext = createContext<ToastContextProps | undefined>(undefined);
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
+  // nueva función para remover toast
+  const removeToast = (id: number) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
+
   const addToast = (message: string, type: ToastType) => {
     const id = Date.now();
     setToasts((prev) => [{ id, message, type }, ...prev]);
 
-    // remover después de 3s
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((toast) => toast.id !== id));
-    }, 3000);
+    // remover automáticamente después de 3s
+    setTimeout(() => removeToast(id), 3000);
+
+    return id; // retorna el id para poder usar removeToast después
   };
 
   const getIcon = (type: ToastType) => {
@@ -39,7 +45,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ToastContext.Provider value={{ addToast }}>
+    <ToastContext.Provider value={{ addToast, removeToast }}>
       {children}
       <div className="toast-container">
         {toasts.map((toast) => (

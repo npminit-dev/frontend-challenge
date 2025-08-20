@@ -76,6 +76,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
     return null
   }
 
+    const getDiscountQuantity = () => {
+    if (product.priceBreaks && product.priceBreaks.length > 1) {
+      const bestDiscount = product.priceBreaks[product.priceBreaks.length - 1]
+      return bestDiscount.minQty
+    }
+    return null
+  }
+
   return (
     <div 
       ref={cardRef} 
@@ -144,7 +152,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {getDiscountPrice() && (
             <div className="discount-info">
               <span className="discount-price l1">{formatPrice(getDiscountPrice()!)}</span>
-              <span className="discount-label l1">desde 50 unidades</span>
+              <span className="discount-label l1">desde {getDiscountQuantity()} unidades</span>
             </div>
           )}
         </div>
