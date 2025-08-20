@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { Product } from '../types/Product'
 import { useCart } from '../CartContext'
 import './PricingCalculator.css'
+import { useToast } from '../ToastContext'
+import { useNavigate } from 'react-router-dom'
 
 interface PricingCalculatorProps {
   product: Product
@@ -13,6 +15,8 @@ const PricingCalculator = ({ product, selectedColor, selectedSize }: PricingCalc
   const { addToCart } = useCart()
   const [quantity, setQuantity] = useState<number>(1)
   const [selectedBreak, setSelectedBreak] = useState<number>(0)
+  const { addToast } = useToast()
+  const navigate = useNavigate()
 
   // Ajustar cantidad si el stock cambia
   useEffect(() => {
@@ -47,20 +51,26 @@ const PricingCalculator = ({ product, selectedColor, selectedSize }: PricingCalc
   const canAddToCart = product.stock > 0
 
   const handleAddToCart = () => {
-    if (!canAddToCart) return
+    if (!canAddToCart) {
+      addToast('No hay stock disponible para este producto', 'error')
+      return
+    } else {
+      const unitPrice = getUnitPrice(quantity)
 
-    const unitPrice = getUnitPrice(quantity)
+      addToCart({
+        id: product.id,
+        name: product.name,
+        basePrice: product.basePrice,
+        unitPrice,
+        quantity,
+        priceBreaks: product.priceBreaks,
+        color: selectedColor,
+        size: selectedSize,
+      })
 
-    addToCart({
-      id: product.id,
-      name: product.name,
-      basePrice: product.basePrice,
-      unitPrice,
-      quantity,
-      priceBreaks: product.priceBreaks,
-      color: selectedColor,
-      size: selectedSize,
-    })
+      addToast('Producto agregado al carrito', 'success')
+    }
+
   }
 
   return (
@@ -162,8 +172,9 @@ const PricingCalculator = ({ product, selectedColor, selectedSize }: PricingCalc
         <div className="calculator-actions">
           <button
             className="btn btn-secondary cta1"
-            disabled={!canAddToCart}
-            onClick={() => alert(`Cotización solicitada para ${quantity} unidades de ${product.name}`)}
+            onClick={() => {
+              navigate('/quotation')
+            }}
           >
             <span className="material-icons">email</span>
             Solicitar cotización oficial
@@ -171,7 +182,6 @@ const PricingCalculator = ({ product, selectedColor, selectedSize }: PricingCalc
 
           <button
             className="btn btn-primary cta1"
-            disabled={!canAddToCart}
             onClick={handleAddToCart}
           >
             <span className="material-icons">shopping_cart</span>

@@ -277,3 +277,25 @@
     font-size: 12px;
   }
 }
+
+/* Estado inicial */
+.product-card.card-hidden {
+  filter: opacity(0);
+}
+
+/* Animación al hacerse visible */
+.product-card.card-visible {
+  animation: fadeInOpacity 1s cubic-bezier(.04,.92,.45,.99) forwards;
+}
+
+/* Keyframes */
+@keyframes fadeInOpacity {
+  from {
+    filter: opacity(0);
+    transform: translateY(20px);
+  }
+  to {
+    filter: opacity(1);
+    transform: translateY(0);
+  }
+}

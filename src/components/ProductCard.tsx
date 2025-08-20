@@ -1,12 +1,40 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Product } from '../types/Product'
 import './ProductCard.css'
+import { useEffect, useState, useRef } from 'react'
 
 interface ProductCardProps {
   product: Product
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+
+  const navigate = useNavigate()
+  const cardRef = useRef<HTMLDivElement | null>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setVisible(true)
+            observer.unobserve(entry.target) // se deja de observar una vez visible
+          }
+        })
+      },
+      {
+        threshold: 0 // la mitad de la altura entra en viewport
+      }
+    )
+
+    if (cardRef.current) observer.observe(cardRef.current)
+
+    return () => {
+      if (cardRef.current) observer.unobserve(cardRef.current)
+    }
+  }, [])
+
   // Handle product status display
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -49,7 +77,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
   }
 
   return (
-    <div className="product-card">
+    <div 
+      ref={cardRef} 
+       className={`product-card ${visible ? 'card-visible' : 'card-hidden'}`}
+    >
       <Link to={`/product/${product.id}`} className="product-link">
         {/* Product Image */}
         <div className="product-image">
@@ -123,8 +154,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
             className="btn btn-secondary l1"
             onClick={(e) => {
               e.preventDefault()
-              alert('Función de cotización por implementar')
+              navigate('/quotation')
             }}
+            disabled={product.stock <= 0}
           >
             <span className="material-icons">calculate</span>
             Cotizar
@@ -136,3 +168,4 @@ const ProductCard = ({ product }: ProductCardProps) => {
 }
 
 export default ProductCard
+

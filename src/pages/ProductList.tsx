@@ -1,20 +1,35 @@
-import { useState } from 'react'
+// src/pages/ProductList.tsx
+import { useState, useEffect } from 'react'
 import ProductCard from '../components/ProductCard'
 import ProductFilters from '../components/ProductFilters'
 import { products as allProducts, categories, suppliers } from '../data/products'
 import { Product } from '../types/Product'
 import './ProductList.css'
+import { useToast } from '../ToastContext'
 
 const ProductList = () => {
-  // Estados existentes
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(allProducts)
+  // Estados
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('name')
-
-  // Nuevos estados
   const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null)
   const [priceRange, setPriceRange] = useState<{ min: number; max: number } | null>(null)
+
+  // Loading
+  const [loading, setLoading] = useState(true)
+  const { addToast } = useToast()
+  useEffect(() => {
+    // Simula carga de productos (2 segundos)
+    addToast('Cargando productos...', 'loading')
+    setLoading(true)
+    const timer = setTimeout(() => {
+      setFilteredProducts(allProducts)
+      addToast('Productos cargados!', 'success')
+      setLoading(false)
+    }, 1200)
+    return () => clearTimeout(timer)
+  }, [])
 
   // Función de filtrado combinada
   const filterProducts = (
@@ -26,10 +41,8 @@ const ProductList = () => {
   ) => {
     let filtered = [...allProducts]
 
-    // Filtrar por categoría
     if (category !== 'all') filtered = filtered.filter(p => p.category === category)
 
-    // Filtrar por búsqueda
     if (search) {
       const q = search.toLowerCase()
       filtered = filtered.filter(
@@ -37,13 +50,10 @@ const ProductList = () => {
       )
     }
 
-    // Filtrar por proveedor
     if (supplier) filtered = filtered.filter(p => p.supplier === supplier)
 
-    // Filtrar por rango de precios
     if (range) filtered = filtered.filter(p => p.basePrice >= range.min && p.basePrice <= range.max)
 
-    // Ordenar
     switch (sort) {
       case 'name': filtered.sort((a, b) => a.name.localeCompare(b.name)); break
       case 'price': filtered.sort((a, b) => a.basePrice - b.basePrice); break
@@ -53,7 +63,7 @@ const ProductList = () => {
     setFilteredProducts(filtered)
   }
 
-  // Handlers existentes
+  // Handlers
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
     filterProducts(category, searchQuery, sortBy)
@@ -69,7 +79,6 @@ const ProductList = () => {
     filterProducts(selectedCategory, searchQuery, sort)
   }
 
-  // Nuevos handlers
   const handleSupplierChange = (supplier: string | null) => {
     setSelectedSupplier(supplier)
     filterProducts(selectedCategory, searchQuery, sortBy, supplier)
@@ -114,23 +123,25 @@ const ProductList = () => {
         </div>
 
         {/* Filters */}
-        <ProductFilters
-          selectedCategory={selectedCategory}
-          searchQuery={searchQuery}
-          sortBy={sortBy}
-          selectedSupplier={selectedSupplier}
-          priceRange={priceRange}
-          onCategoryChange={handleCategoryChange}
-          onSearchChange={handleSearchChange}
-          onSortChange={handleSortChange}
-          onSupplierChange={handleSupplierChange}
-          onPriceRangeChange={handlePriceRangeChange}
-          onClearFilters={handleClearFilters}
-        />
+        <div className="filters-section">
+          <ProductFilters
+            selectedCategory={selectedCategory}
+            searchQuery={searchQuery}
+            sortBy={sortBy}
+            selectedSupplier={selectedSupplier}
+            priceRange={priceRange}
+            onCategoryChange={handleCategoryChange}
+            onSearchChange={handleSearchChange}
+            onSortChange={handleSortChange}
+            onSupplierChange={handleSupplierChange}
+            onPriceRangeChange={handlePriceRangeChange}
+            onClearFilters={handleClearFilters}
+          />
+        </div>
 
-        {/* Products Grid */}
+        {/* Products Section */}
         <div className="products-section">
-          {filteredProducts.length === 0 ? (
+          {!loading && filteredProducts.length === 0 ? (
             <div className="empty-state">
               <span className="material-icons">search_off</span>
               <h3 className="h2">No hay productos</h3>

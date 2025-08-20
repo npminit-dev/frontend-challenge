@@ -1,0 +1,117 @@
+/* QuotationForm Component Styles */
+.quotation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Card style for sections */
+.form-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Section titles */
+.form-card h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+/* Grid for company inputs */
+.company-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.company-inputs input {
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+
+.company-inputs input:focus {
+  border-color: #667eea;
+}
+
+/* Product list */
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.product-item:last-child {
+  border-bottom: none;
+}
+
+.product-item .product-info p {
+  margin: 0;
+}
+
+.product-item .product-info .product-name {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.product-item .product-info .product-base-price {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+/* Quantity input */
+.product-item input[type="number"] {
+  width: 120px;
+  padding: 4px 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.product-item input[type="number"]:focus {
+  border-color: #667eea;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .company-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .product-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .product-item input[type="number"] {
+    width: 100%;
+  }
+}
+
+@media (min-width: 769px) {
+  .product-item input[type="number"] {
+    text-align: center;
+  }
+}
+

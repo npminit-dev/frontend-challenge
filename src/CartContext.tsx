@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { useToast } from './ToastContext'
 
 export interface PriceBreak {
   minQty: number
@@ -59,7 +60,8 @@ const getUnitPrice = (basePrice: number, quantity: number, priceBreaks?: PriceBr
 
 export const CartProvider = ({ children }: CartProviderProps) => {
   const [cart, setCart] = useState<CartItem[]>(JSON.parse(localStorage.getItem('cart') || '[]'))
-
+  const { addToast } = useToast()
+  
   // Guardar carrito en localStorage cuando cambie
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart))
@@ -88,7 +90,10 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     setCart(prev => prev.filter(i => !(i.id === id && i.color === color && i.size === size)))
   }
 
-  const clearCart = () => setCart([])
+  const clearCart = () => {
+    setCart([])
+    addToast('Carrito vaciado.', 'info')
+  }
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0)
 

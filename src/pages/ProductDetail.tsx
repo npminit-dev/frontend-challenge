@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { products } from '../data/products'
 import { Product } from '../types/Product'
 import PricingCalculator from '../components/PricingCalculator'
 import './ProductDetail.css'
 import { useCart } from '../CartContext'
+import { useToast } from '../ToastContext'
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -13,6 +14,8 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState<string>('')
   const [quantity, setQuantity] = useState<number>(1)
   const { addToCart } = useCart()
+  const navigate = useNavigate()
+  const { addToast } = useToast()
 
   useEffect(() => {
     if (id) {
@@ -192,30 +195,33 @@ const ProductDetail = () => {
               <div className="action-buttons">
 
                 <button
-                  className={`btn btn-primary cta1 ${!canAddToCart ? 'disabled' : ''}`}
-                  disabled={!canAddToCart}
+                  className={`btn btn-primary cta1`}
                   onClick={() => {
-                    if (!product || !canAddToCart) return
-
-                    addToCart({
-                      id: product.id,
-                      name: product.name,
-                      basePrice: product.basePrice,
-                      unitPrice: product.basePrice, 
-                      quantity: quantity,
-                      priceBreaks: product.priceBreaks, 
-                      color: selectedColor,
-                      size: selectedSize,
-                    })
+                    if (!product || !canAddToCart) {
+                      addToast('No hay stock disponible para este producto', 'error')
+                    } else {
+                      addToCart({
+                        id: product.id,
+                        name: product.name,
+                        basePrice: product.basePrice,
+                        unitPrice: product.basePrice, 
+                        quantity: quantity,
+                        priceBreaks: product.priceBreaks, 
+                        color: selectedColor,
+                        size: selectedSize,
+                      })
+  
+                      addToast('Producto agregado al carrito.', 'success')
+                    }
                   }}
                 >
                   <span className="material-icons">shopping_cart</span>
-                  {canAddToCart ? 'Agregar al carrito' : 'No disponible'}
+                  Agregar al carrito
                 </button>
 
                 <button
                   className="btn btn-secondary cta1"
-                  onClick={() => alert('Función de cotización por implementar')}
+                  onClick={() => navigate('/quotation')}
                 >
                   <span className="material-icons">calculate</span>
                   Solicitar cotización

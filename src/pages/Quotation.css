@@ -1,0 +1,54 @@
+/* Quotation Simulator Styles */
+.quotation-simulator {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.quotation-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* Form wrapper */
+.quotation-form-wrapper {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  padding: 24px;
+}
+
+/* Summary wrapper */
+.quotation-summary-wrapper {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  padding: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .quotation-simulator {
+    padding: 16px;
+    gap: 24px;
+  }
+
+  .quotation-form-wrapper,
+  .quotation-summary-wrapper {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quotation-simulator {
+    padding: 12px;
+    gap: 16px;
+  }
+}

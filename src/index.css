@@ -48,6 +48,10 @@ body {
   font-weight: 600; 
 }
 
+button:disabled {
+  cursor: not-allowed
+}
+
 /* Responsive Typography */
 @media (max-width: 768px) {
   .h1 { font-size: 40px; }
