@@ -5,6 +5,7 @@ import { CartProvider } from './CartContext'
 import { ToastProvider } from './ToastContext'
 import { lazy, Suspense } from 'react'
 import ProductList from './pages/ProductList'
+import Loader from './components/Loader'
 
 // 🔹 Importación diferida (lazy)
 const ProductDetail = lazy(() => import('./pages/ProductDetail'))
@@ -19,7 +20,7 @@ function App() {
           <Header />
           <main>
             {/* 🔹 Suspense para mostrar fallback mientras se carga */}
-            <Suspense fallback={<div>Cargando...</div>}>
+            <Suspense fallback={<Loader />}>
               <Routes>
                 <Route path="/" element={<ProductList />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
