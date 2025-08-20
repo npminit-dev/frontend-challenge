@@ -23,7 +23,7 @@ const Header = () => {
               <span className="material-icons">home</span>
               Catálogo
             </Link>
-            <Link to="/cart" className="nav-link l1">
+            <Link to="/cart" className="nav-link l2">
               <span className="material-icons">shopping_cart</span>
               Carrito ({totalItems})
             </Link>

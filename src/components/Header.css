@@ -3,7 +3,7 @@
   background: #1a1a1a;
   color: white;
   padding: 16px 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -74,8 +74,9 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-.nav-link .material-icons {
-  font-size: 18px;
+.nav-link,
+.material-icons {
+  font-size: 16px !important;
 }
 
 /* Header Actions */
@@ -90,22 +91,32 @@
   .header-content {
     gap: 16px;
   }
-  
+
   .nav {
     gap: 16px;
   }
-  
+
   .nav-link {
     padding: 6px 12px;
   }
-  
+
   .logo-text {
     display: none;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 769px) {
+
   .nav {
+    justify-content: start;
+  }
+
+  .nav-link.l1 {
     display: none;
+  }
+
+  .nav-link,
+  .material-icons {
+    font-size: 14px !important;
   }
 }
