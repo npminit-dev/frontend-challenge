@@ -1,6 +1,6 @@
 // src/components/QuotationSimulator/QuotationForm.tsx
-import { useState, ChangeEvent } from 'react';
-import { PriceBreak, Product } from '../types/Product';
+import { ChangeEvent } from 'react';
+import { Product } from '../types/Product';
 import './QuotationForm.css'
 import { QuotationProduct } from './QuotationProduct';
 

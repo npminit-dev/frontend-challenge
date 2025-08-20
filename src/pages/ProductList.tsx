@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import ProductCard from '../components/ProductCard'
 import ProductFilters from '../components/ProductFilters'
-import { products as allProducts, categories, suppliers } from '../data/products'
+import { products as allProducts, categories } from '../data/products'
 import { Product } from '../types/Product'
 import './ProductList.css'
 import { useToast } from '../ToastContext'
@@ -63,6 +63,11 @@ const ProductList = () => {
     setFilteredProducts(filtered)
   }
 
+  const calcAvailableCategories = () => {
+    const uniqueCategories = new Set(filteredProducts.map(p => p.category))
+    return [...Array.from(uniqueCategories)].length
+  }
+
   // Handlers
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
@@ -116,7 +121,7 @@ const ProductList = () => {
               <span className="stat-label l1">productos</span>
             </div>
             <div className="stat-item">
-              <span className="stat-value p1-medium">{categories.length}</span>
+              <span className="stat-value p1-medium">{calcAvailableCategories()}</span>
               <span className="stat-label l1">categorías</span>
             </div>
           </div>

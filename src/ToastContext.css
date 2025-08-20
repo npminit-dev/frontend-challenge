@@ -43,21 +43,20 @@
   word-break: break-word;
 }
 
-/* Colores según tipo */
+/* Colores según tipo - mayor contraste con blanco */
 .toast.success {
-  background-color: #28a745;
+  background-color: #1e7e34; /* verde oscuro */
+  color: white;
 }
 
 .toast.error {
-  background-color: #dc3545;
+  background-color: #b02a37; /* rojo profundo */
+  color: white;
 }
 
-.toast.loading {
-  background-color: #007bff;
-}
-
-.toast.info {
-  background-color: #17a2b8; /* un azul tipo info */
+.toast.loading, .toast.info {
+  background-color: #0056b3; /* azul oscuro */
+  color: white;
 }
 
 /* Animaciones */

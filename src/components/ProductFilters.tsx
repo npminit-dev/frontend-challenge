@@ -76,7 +76,7 @@ const ProductFilters = ({
 
         {/* Category Filters */}
         <div className="filter-section">
-          <h3 className="filter-title p1-medium">Categorías</h3>
+          <h2 className="filter-title p1-medium">Categorías</h2>
           <div className="category-filters">
             {categories.map(category => (
               <button
@@ -94,21 +94,23 @@ const ProductFilters = ({
 
         {/* Sort Options */}
         <div className="filter-section">
-          <h3 className="filter-title p1-medium">Ordenar por</h3>
-          <select 
-            value={sortBy} 
-            onChange={(e) => onSortChange(e.target.value)}
-            className="sort-select p1"
-          >
-            <option value="name">Nombre A-Z</option>
-            <option value="price">Precio</option>
-            <option value="stock">Stock disponible</option>
-          </select>
+          <label>
+            <h2 className="filter-title p1-medium">Ordenar por</h2>
+            <select 
+              value={sortBy} 
+              onChange={(e) => onSortChange(e.target.value)}
+              className="sort-select p1"
+            >
+              <option value="name">Nombre A-Z</option>
+              <option value="price">Precio</option>
+              <option value="stock">Stock disponible</option>
+            </select>
+          </label>
         </div>
 
         {/* Supplier Filters */}
         <div className="filter-section">
-          <h3 className="filter-title p1-medium">Proveedores</h3>
+          <h2 className="filter-title p1-medium">Proveedores</h2>
           <div className="supplier-list">
             <button
               className={`category-btn ${selectedSupplier === null ? 'active' : ''}`}
@@ -130,7 +132,7 @@ const ProductFilters = ({
 
         {/* Price Range Filters */}
         <div className="filter-section">
-          <h3 className="filter-title p1-medium">Rango de precios</h3>
+          <h2 className="filter-title p1-medium">Rango de precios</h2>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <input
               type="number"

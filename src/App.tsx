@@ -1,12 +1,15 @@
 import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
-import ProductList from './pages/ProductList'
-import ProductDetail from './pages/ProductDetail'
 import './App.css'
 import { CartProvider } from './CartContext'
-import Cart from './pages/Cart'
-import { Quotation } from './pages/Quotation'
 import { ToastProvider } from './ToastContext'
+import { lazy, Suspense } from 'react'
+import ProductList from './pages/ProductList'
+
+// 🔹 Importación diferida (lazy)
+const ProductDetail = lazy(() => import('./pages/ProductDetail'))
+const Cart = lazy(() => import('./pages/Cart'))
+const Quotation = lazy(() => import('./pages/Quotation').then(module => ({ default: module.Quotation })))
 
 function App() {
   return (
@@ -15,12 +18,15 @@ function App() {
         <div className="App">
           <Header />
           <main>
-            <Routes>
-              <Route path="/" element={<ProductList />} />
-              <Route path="/product/:id" element={<ProductDetail />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/quotation" element={<Quotation />} />
-            </Routes>
+            {/* 🔹 Suspense para mostrar fallback mientras se carga */}
+            <Suspense fallback={<div>Cargando...</div>}>
+              <Routes>
+                <Route path="/" element={<ProductList />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/quotation" element={<Quotation />} />
+              </Routes>
+            </Suspense>
           </main>
         </div>
       </CartProvider>
