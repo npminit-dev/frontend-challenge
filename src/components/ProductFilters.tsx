@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { categories, suppliers } from '../data/products'
 import './ProductFilters.css'
 
@@ -5,19 +6,49 @@ interface ProductFiltersProps {
   selectedCategory: string
   searchQuery: string
   sortBy: string
+  selectedSupplier: string | null
+  priceRange: { min: number; max: number } | null
   onCategoryChange: (category: string) => void
   onSearchChange: (search: string) => void
   onSortChange: (sort: string) => void
+  onSupplierChange: (supplier: string | null) => void
+  onPriceRangeChange: (range: { min: number; max: number } | null) => void
+  onClearFilters: () => void
 }
 
 const ProductFilters = ({
   selectedCategory,
   searchQuery,
   sortBy,
+  selectedSupplier,
+  priceRange,
   onCategoryChange,
   onSearchChange,
-  onSortChange
+  onSortChange,
+  onSupplierChange,
+  onPriceRangeChange,
+  onClearFilters
 }: ProductFiltersProps) => {
+
+  const [minPriceInput, setMinPriceInput] = useState(priceRange?.min || '')
+  const [maxPriceInput, setMaxPriceInput] = useState(priceRange?.max || '')
+
+  const handlePriceChange = () => {
+    const min = Number(minPriceInput)
+    const max = Number(maxPriceInput)
+    if (!isNaN(min) && !isNaN(max) && min <= max) {
+      onPriceRangeChange({ min, max })
+    } else {
+      onPriceRangeChange(null)
+    }
+  }
+
+  const handleClearPrice = () => {
+    setMinPriceInput('')
+    setMaxPriceInput('')
+    onPriceRangeChange(null)
+  }
+
   return (
     <div className="product-filters">
       <div className="filters-card">
@@ -75,17 +106,61 @@ const ProductFilters = ({
           </select>
         </div>
 
-        {/* Quick Stats - Bug: hardcoded values instead of dynamic */}
+        {/* Supplier Filters */}
         <div className="filter-section">
           <h3 className="filter-title p1-medium">Proveedores</h3>
           <div className="supplier-list">
+            <button
+              className={`category-btn ${selectedSupplier === null ? 'active' : ''}`}
+              onClick={() => onSupplierChange(null)}
+            >
+              Todos
+            </button>
             {suppliers.map(supplier => (
-              <div key={supplier.id} className="supplier-item">
-                <span className="supplier-name l1">{supplier.name}</span>
-                <span className="supplier-count l1">{supplier.products}</span>
-              </div>
+              <button
+                key={supplier.id}
+                className={`category-btn ${selectedSupplier === supplier.id ? 'active' : ''}`}
+                onClick={() => onSupplierChange(supplier.id)}
+              >
+                {supplier.name} ({supplier.products})
+              </button>
             ))}
           </div>
+        </div>
+
+        {/* Price Range Filters */}
+        <div className="filter-section">
+          <h3 className="filter-title p1-medium">Rango de precios</h3>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <input
+              type="number"
+              placeholder="Min"
+              value={minPriceInput}
+              onChange={(e) => setMinPriceInput(e.target.value)}
+              className="sort-select"
+            />
+            <span>-</span>
+            <input
+              type="number"
+              placeholder="Max"
+              value={maxPriceInput}
+              onChange={(e) => setMaxPriceInput(e.target.value)}
+              className="sort-select"
+            />
+            <button className="btn btn-primary" onClick={handlePriceChange}>
+              Aplicar
+            </button>
+            <button className="btn" onClick={handleClearPrice}>
+              Limpiar
+            </button>
+          </div>
+        </div>
+
+        {/* Clear All Filters */}
+        <div className="filter-section">
+          <button className="btn btn-secondary w-full" onClick={onClearFilters}>
+            Limpiar todos los filtros
+          </button>
         </div>
       </div>
     </div>

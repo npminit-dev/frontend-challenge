@@ -1,0 +1,147 @@
+/* Cart.css */
+
+/* Contenedor principal */
+.cart-page {
+  min-height: calc(100vh - 80px);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Estado vacío */
+.cart-page.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+}
+
+/* Lista de items */
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Cada item del carrito */
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  gap: 12px;
+}
+
+/* Información del producto */
+.item-info {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-name {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.item-variant {
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* Cantidad */
+.item-quantity {
+  flex: 1;
+  text-align: center;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+/* Precio y descuento */
+.item-price {
+  flex: 1;
+  text-align: right;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.item-discount {
+  font-size: 12px;
+  color: #10b981; /* verde como tus badges de descuento */
+  font-weight: 500;
+}
+
+/* Botones de acción */
+.item-actions {
+  flex: 0;
+}
+
+.item-actions .btn {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+/* Resumen y totales */
+.cart-summary {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 600;
+  gap: 16px;
+  color: #1a1a1a;
+}
+
+.total-price {
+  color: #10b981;
+  font-size: 22px;
+}
+
+/* Botones de acciones generales */
+.cart-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cart-actions .btn {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cart-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .item-price {
+    align-items: flex-start;
+  }
+
+  .cart-summary {
+    justify-content: space-between;
+  }
+
+  .cart-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cart-actions .btn {
+    width: 100%;
+  }
+}

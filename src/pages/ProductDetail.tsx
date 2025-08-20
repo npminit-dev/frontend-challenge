@@ -4,6 +4,7 @@ import { products } from '../data/products'
 import { Product } from '../types/Product'
 import PricingCalculator from '../components/PricingCalculator'
 import './ProductDetail.css'
+import { useCart } from '../CartContext'
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -11,12 +12,13 @@ const ProductDetail = () => {
   const [selectedColor, setSelectedColor] = useState<string>('')
   const [selectedSize, setSelectedSize] = useState<string>('')
   const [quantity, setQuantity] = useState<number>(1)
+  const { addToCart } = useCart()
 
   useEffect(() => {
     if (id) {
       const foundProduct = products.find(p => p.id === parseInt(id))
       setProduct(foundProduct || null)
-      
+
       if (foundProduct?.colors && foundProduct.colors.length > 0) {
         setSelectedColor(foundProduct.colors[0])
       }
@@ -25,6 +27,17 @@ const ProductDetail = () => {
       }
     }
   }, [id])
+
+  useEffect(() => {
+    if (!product) return;
+
+    if (quantity > product.stock) {
+      setQuantity(product.stock)
+    }
+    if (product.stock === 0) {
+      setQuantity(0)
+    }
+  }, [product, quantity])
 
   if (!product) {
     return (
@@ -150,31 +163,26 @@ const ProductDetail = () => {
               <div className="quantity-selector">
                 <label className="quantity-label l1">Cantidad:</label>
                 <div className="quantity-controls">
-                  <button 
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="quantity-btn"
-                    disabled={!canAddToCart}
+                  <button
+                    onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                    disabled={quantity <= 1 || product.stock === 0}
+                    className='quantity-btn'
                   >
                     <span className="material-icons">remove</span>
                   </button>
 
-                  <input 
-                    type="number" 
-                    value={product.stock > 0 ? quantity : 0} 
-                    onChange={(e) => {
-                      const val = parseInt(e.target.value) || 1
-                      setQuantity(Math.min(Math.max(1, val), product.stock))
-                    }}
+                  <input
+                    type="number"
+                    value={quantity}
+                    min={1}
+                    max={product.stock}  // <- aquí
+                    onChange={(e) => setQuantity(Math.min(Math.max(1, parseInt(e.target.value) || 1), product.stock))}
                     className="quantity-input"
-                    min="1"
-                    max={product.stock}
-                    disabled={!canAddToCart}
                   />
-
-                  <button 
+                  <button
                     onClick={() => setQuantity(Math.min(quantity + 1, product.stock))}
-                    className="quantity-btn"
-                    disabled={!canAddToCart}
+                    disabled={quantity >= product.stock || product.stock === 0}
+                    className='quantity-btn'
                   >
                     <span className="material-icons">add</span>
                   </button>
@@ -182,16 +190,30 @@ const ProductDetail = () => {
               </div>
 
               <div className="action-buttons">
-                <button 
+
+                <button
                   className={`btn btn-primary cta1 ${!canAddToCart ? 'disabled' : ''}`}
                   disabled={!canAddToCart}
-                  onClick={() => alert('Función de agregar al carrito por implementar')}
+                  onClick={() => {
+                    if (!product || !canAddToCart) return
+
+                    addToCart({
+                      id: product.id,
+                      name: product.name,
+                      basePrice: product.basePrice,
+                      unitPrice: product.basePrice, 
+                      quantity: quantity,
+                      priceBreaks: product.priceBreaks, 
+                      color: selectedColor,
+                      size: selectedSize,
+                    })
+                  }}
                 >
                   <span className="material-icons">shopping_cart</span>
                   {canAddToCart ? 'Agregar al carrito' : 'No disponible'}
                 </button>
-                
-                <button 
+
+                <button
                   className="btn btn-secondary cta1"
                   onClick={() => alert('Función de cotización por implementar')}
                 >

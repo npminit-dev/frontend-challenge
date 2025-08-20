@@ -1,51 +1,59 @@
 import { useState } from 'react'
 import ProductCard from '../components/ProductCard'
 import ProductFilters from '../components/ProductFilters'
-import { products as allProducts } from '../data/products'
+import { products as allProducts, categories, suppliers } from '../data/products'
 import { Product } from '../types/Product'
 import './ProductList.css'
 
 const ProductList = () => {
+  // Estados existentes
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(allProducts)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('name')
 
-  // Filter and sort products based on criteria
-  const filterProducts = (category: string, search: string, sort: string) => {
+  // Nuevos estados
+  const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null)
+  const [priceRange, setPriceRange] = useState<{ min: number; max: number } | null>(null)
+
+  // Función de filtrado combinada
+  const filterProducts = (
+    category: string,
+    search: string,
+    sort: string,
+    supplier: string | null = selectedSupplier,
+    range: { min: number; max: number } | null = priceRange
+  ) => {
     let filtered = [...allProducts]
 
-    // Category filter
-    if (category !== 'all') {
-      filtered = filtered.filter(product => product.category === category)
-    }
+    // Filtrar por categoría
+    if (category !== 'all') filtered = filtered.filter(p => p.category === category)
 
-    // Search filter
+    // Filtrar por búsqueda
     if (search) {
-      const lowCasedSearch = search.toLowerCase()
-      filtered = filtered.filter((product) => {
-        return product.name.toLowerCase().includes(lowCasedSearch) || product.sku.toLowerCase().includes(lowCasedSearch)
-      })
+      const q = search.toLowerCase()
+      filtered = filtered.filter(
+        p => p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q)
+      )
     }
 
-    // Sorting logic
+    // Filtrar por proveedor
+    if (supplier) filtered = filtered.filter(p => p.supplier === supplier)
+
+    // Filtrar por rango de precios
+    if (range) filtered = filtered.filter(p => p.basePrice >= range.min && p.basePrice <= range.max)
+
+    // Ordenar
     switch (sort) {
-      case 'name':
-        filtered.sort((a, b) => a.name.localeCompare(b.name))
-        break
-      case 'price':
-        filtered.sort((a, b) => a.basePrice - b.basePrice)
-        break
-      case 'stock':
-        filtered.sort((a, b) => b.stock - a.stock)
-        break
-      default:
-        break
+      case 'name': filtered.sort((a, b) => a.name.localeCompare(b.name)); break
+      case 'price': filtered.sort((a, b) => a.basePrice - b.basePrice); break
+      case 'stock': filtered.sort((a, b) => b.stock - a.stock); break
     }
 
     setFilteredProducts(filtered)
   }
 
+  // Handlers existentes
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
     filterProducts(category, searchQuery, sortBy)
@@ -59,6 +67,26 @@ const ProductList = () => {
   const handleSortChange = (sort: string) => {
     setSortBy(sort)
     filterProducts(selectedCategory, searchQuery, sort)
+  }
+
+  // Nuevos handlers
+  const handleSupplierChange = (supplier: string | null) => {
+    setSelectedSupplier(supplier)
+    filterProducts(selectedCategory, searchQuery, sortBy, supplier)
+  }
+
+  const handlePriceRangeChange = (range: { min: number; max: number } | null) => {
+    setPriceRange(range)
+    filterProducts(selectedCategory, searchQuery, sortBy, selectedSupplier, range)
+  }
+
+  const handleClearFilters = () => {
+    setSelectedCategory('all')
+    setSearchQuery('')
+    setSortBy('name')
+    setSelectedSupplier(null)
+    setPriceRange(null)
+    filterProducts('all', '', 'name', null, null)
   }
 
   return (
@@ -79,7 +107,7 @@ const ProductList = () => {
               <span className="stat-label l1">productos</span>
             </div>
             <div className="stat-item">
-              <span className="stat-value p1-medium">6</span>
+              <span className="stat-value p1-medium">{categories.length}</span>
               <span className="stat-label l1">categorías</span>
             </div>
           </div>
@@ -90,9 +118,14 @@ const ProductList = () => {
           selectedCategory={selectedCategory}
           searchQuery={searchQuery}
           sortBy={sortBy}
+          selectedSupplier={selectedSupplier}
+          priceRange={priceRange}
           onCategoryChange={handleCategoryChange}
           onSearchChange={handleSearchChange}
           onSortChange={handleSortChange}
+          onSupplierChange={handleSupplierChange}
+          onPriceRangeChange={handlePriceRangeChange}
+          onClearFilters={handleClearFilters}
         />
 
         {/* Products Grid */}
@@ -104,11 +137,7 @@ const ProductList = () => {
               <p className="p1">No se encontraron productos que coincidan con tu búsqueda.</p>
               <button
                 className="btn btn-primary cta1"
-                onClick={() => {
-                  setSearchQuery('')
-                  setSelectedCategory('all')
-                  filterProducts('all', '', sortBy)
-                }}
+                onClick={handleClearFilters}
               >
                 Ver todos los productos
               </button>
