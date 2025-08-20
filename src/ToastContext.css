@@ -8,7 +8,8 @@
   gap: 10px;
   z-index: 9999;
   text-wrap: nowrap;
-  min-height: 60px;
+  height: 60px;
+  width: 275px;
 }
 
 /* Estilo base de cada toast */

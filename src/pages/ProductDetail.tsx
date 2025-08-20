@@ -198,7 +198,7 @@ const ProductDetail = () => {
                   className={`btn btn-primary cta1`}
                   onClick={() => {
                     if (!product || !canAddToCart) {
-                      addToast('No hay stock disponible para este producto', 'error')
+                      addToast('Producto sin stock', 'error')
                     } else {
                       addToCart({
                         id: product.id,

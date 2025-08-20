@@ -52,7 +52,7 @@ const PricingCalculator = ({ product, selectedColor, selectedSize }: PricingCalc
 
   const handleAddToCart = () => {
     if (!canAddToCart) {
-      addToast('No hay stock disponible para este producto', 'error')
+      addToast('Producto sin stock', 'error')
       return
     } else {
       const unitPrice = getUnitPrice(quantity)
